@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../CSS/iconfont.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    
+        body{
+            background-color: #ccc;
+            margin: auto 100px;
+        }
+        canvas{
+            background-color: #fff;
+            display: block;
+        }
+        .iconfont{
+            font-size: 22px;
+            color: brown;
+            margin-left: 5px;
+        }
+        .iconfont:hover{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <input type="number" value="5" placeholder="请输入线性的宽度"/>
+    <input type="color"/>
+    <span class="iconfont">&#xe60b;</span>
+    <canvas width="700px" height="600px">
+        你需要更换浏览器了！
+    </canvas>
+    <img src="" alt="">
+    <script>
+        // 页面加载后执行
+        window.onload=function(){
+            // 获取元素
+            var ocanvas=document.getElementsByTagName("canvas")[0];
+            var ospan=document.getElementsByTagName("span")[0];
+            var oimg=document.getElementsByTagName("img")[0];
+            var aipt=document.getElementsByTagName("input");
+            
+            var ctx=ocanvas.getContext("2d");
+            
+            // ocanvas.onmousedown=mousedown();
+            function mousedown(){
+                // 绑定鼠标按下事件
+                ocanvas.onmousedown=function(ev){
+                    var ev=ev||window.event;
+                    // 获取鼠标的坐标
+                    var omousex=ev.pageX-ocanvas.offsetLeft;
+                    var omousey=ev.pageY-ocanvas.offsetTop;
+                    // 开始绘制
+                    ctx.beginPath();
+                    
+                    // 获取线性的宽度
+                    var num=aipt[0].value;
+                    // 获取线性的颜色
+                    var color=aipt[1].value;
+                    // 设置线性的宽度和颜色
+                    ctx.lineWidth = num;
+                    ctx.strokeStyle=color;
+                    // 开始坐标
+                    ctx.moveTo(omousex,omousey);
+                    // 绑定鼠标移动事件
+                    ocanvas.onmousemove=function(ev){
+                        var ev=ev||windw.event;
+                        // 获取当前鼠标的坐标
+                        var x=ev.pageX-ocanvas.offsetLeft;
+                        var y=ev.pageY-ocanvas.offsetTop;
+                        // linetop到的坐标
+                        ctx.lineTo(x,y);
+                        // 绘制线条
+                        ctx.stroke();
+                    }
+                    // 绑定鼠标松开事件
+                    ocanvas.onmouseup=function(){
+                        // 关闭路径
+                        ctx.closePath();
+                        // 取消鼠标移动事件
+                        ocanvas.onmousemove = null;
+                    // 生成图片路径
+                    var osrc=ocanvas.toDataURL();
+                        oimg.src=osrc;
+
+                    
+                    }
+                }
+            }
+            mousedown();
+            // 绑定清除的功能
+            ospan.onclick=function(){
+                ocanvas.onmousedown=function(){
+                    ocanvas.onmousemove=function(ev){
+                        var ev=ev||windw.event;
+                        var amousex=ev.pageX;
+                        var amousey=ev.pageY;
+                        ctx.clearRect(amousex-100,amousey-50,20,20);
+                    }
+                }
+                 // 松开事件
+                // ocanvas.onmouseout=function(){
+                //     console.log(12345);
+                //     ocanvas.onmousedown =null;
+                // }
+            }
+            //绑定点击事件 重新调用mousedown()
+            aipt[1].onclick=function(){
+                mousedown();
+            }
+            
+        }
+    
+    </script>
+</body>
+</html>
